@@ -35,15 +35,35 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedRoutes = ["/generate", "/favourites", "/internal/add-thumbnail"];
+  const protectedRoutes = ["/generate", "/favourites", "/internal/add-thumbnail", "/gallery"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
+  const isOnboardingRoute = request.nextUrl.pathname === "/onboarding";
 
-  if (isProtectedRoute && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
-    return NextResponse.redirect(url);
+  if (!user) {
+    if (isProtectedRoute || isOnboardingRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/login";
+      return NextResponse.redirect(url);
+    }
+  } else {
+    // User is logged in
+    const hasOnboarded = user.user_metadata?.onboarded === true;
+    
+    if (!hasOnboarded && isProtectedRoute) {
+      // Force onboarding
+      const url = request.nextUrl.clone();
+      url.pathname = "/onboarding";
+      return NextResponse.redirect(url);
+    }
+    
+    if (hasOnboarded && isOnboardingRoute) {
+      // Already onboarded, don't let them see onboarding page again
+      const url = request.nextUrl.clone();
+      url.pathname = "/gallery";
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
