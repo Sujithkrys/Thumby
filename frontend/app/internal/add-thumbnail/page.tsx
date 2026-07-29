@@ -63,6 +63,73 @@ export default function AddThumbnailPage() {
     }
   };
 
+  const [verifiedAdmin, setVerifiedAdmin] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState<"Sujith" | "Gopal" | null>(null);
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminError, setAdminError] = useState("");
+
+  const handleAdminVerify = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedAdmin === "Sujith" && adminEmail === "thalathotysujith@gmail.com") {
+      setVerifiedAdmin(true);
+    } else if (selectedAdmin === "Gopal" && adminEmail === "phanniuddandam1@gmail.com") {
+      setVerifiedAdmin(true);
+    } else {
+      setAdminError("Incorrect email for this admin.");
+    }
+  };
+
+  if (!verifiedAdmin) {
+    return (
+      <div className="max-w-[400px] mx-auto pt-20">
+        <h1 className="font-heading font-semibold text-[24px] text-ink mb-6 text-center">Admins</h1>
+        
+        {!selectedAdmin ? (
+          <div className="flex flex-col gap-4">
+            <button 
+              onClick={() => setSelectedAdmin("Sujith")}
+              className="w-full bg-white border border-border-medium rounded-[--radius-button] py-[12px] text-[15px] font-semibold text-ink hover:bg-studio transition-colors cursor-pointer"
+            >
+              Sujith
+            </button>
+            <button 
+              onClick={() => setSelectedAdmin("Gopal")}
+              className="w-full bg-white border border-border-medium rounded-[--radius-button] py-[12px] text-[15px] font-semibold text-ink hover:bg-studio transition-colors cursor-pointer"
+            >
+              Gopal
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleAdminVerify} className="bg-white p-6 rounded-[12px] border border-border-light shadow-sm flex flex-col gap-4">
+            <h2 className="font-heading font-semibold text-[17px] text-ink">Verify as {selectedAdmin}</h2>
+            <Input
+              label="Admin Email"
+              type="email"
+              value={adminEmail}
+              onChange={setAdminEmail}
+              placeholder="Enter your admin email"
+            />
+            {adminError && <p className="text-[13px] text-flare">{adminError}</p>}
+            <Button variant="primary" onClick={() => {}} className="mt-2">
+              Verify
+            </Button>
+            <button 
+              type="button"
+              onClick={() => {
+                setSelectedAdmin(null);
+                setAdminError("");
+                setAdminEmail("");
+              }}
+              className="text-[13px] text-slate hover:text-ink mt-2 cursor-pointer bg-transparent border-none"
+            >
+              Back
+            </button>
+          </form>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[600px] mx-auto pt-8">
       <h1 className="font-heading font-semibold text-[22px] text-ink mb-6">Internal: Add Thumbnail</h1>
