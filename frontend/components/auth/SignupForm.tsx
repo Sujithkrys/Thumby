@@ -84,44 +84,64 @@ export function SignupForm() {
         <div className="h-px bg-border-light flex-1"></div>
       </div>
 
-      <form onSubmit={handleSignup} className="flex flex-col gap-4">
-        <Input
-          label="Name"
-          type="text"
-          placeholder="Your name"
-          value={name}
-          onChange={setName}
-        />
-        <Input
-          label="Email"
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={setEmail}
-        />
-        <Input
-          label="Password"
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={setPassword}
-        />
-        
-        {error && <p className="text-flare text-[13px]">{error}</p>}
-        
-        <Button 
-          variant="primary" 
-          disabled={loading} 
-          onClick={() => {}}
-          className="mt-2"
-        >
-          {loading ? "Signing up..." : "Sign up with Email"}
-        </Button>
-      </form>
+      {error && !error.includes("Success") && <p className="text-flare text-[13px]">{error}</p>}
       
-      <p className="mt-6 text-center text-slate text-[13px]">
-        Already have an account? <Link href="/auth/login" className="text-ink font-semibold">Log in</Link>
-      </p>
+      {error && error.includes("Success") ? (
+        <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="w-12 h-12 bg-studio rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ink">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+          </div>
+          <h2 className="font-heading text-[17px] text-ink mb-2">Check your email</h2>
+          <p className="text-slate text-[13px] mb-6">
+            We've sent a confirmation link to <span className="font-semibold text-ink">{email}</span>. Please click the link to verify your account.
+          </p>
+          <Link href="/auth/login" className="text-[13px] font-semibold text-ink hover:underline">
+            Return to Log in
+          </Link>
+        </div>
+      ) : (
+        <>
+          <form onSubmit={handleSignup} className="flex flex-col gap-4">
+            <Input
+              label="Name"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={setName}
+            />
+            <Input
+              label="Email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={setEmail}
+            />
+            <Input
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={setPassword}
+            />
+            
+            <Button 
+              variant="primary" 
+              disabled={loading} 
+              onClick={() => {}}
+              className="mt-2"
+            >
+              {loading ? "Signing up..." : "Sign up with Email"}
+            </Button>
+          </form>
+          
+          <p className="mt-6 text-center text-slate text-[13px]">
+            Already have an account? <Link href="/auth/login" className="text-ink font-semibold">Log in</Link>
+          </p>
+        </>
+      )}
     </div>
   );
 }
