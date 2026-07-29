@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/*
+ * Thumby Design Tokens
+ * Single source of truth — extracted from thumbnail-generator-preview.jsx
+ * All colors, fonts, and spacing tokens live here via Tailwind v4 @theme.
+ */
+
+@theme inline {
+  /* ── Core Colors (from COLORS constant) ── */
+  --color-studio: #F7F8F6;
+  --color-ink: #16181C;
+  --color-flare: #F0402A;
+  --color-slate: #6B6F76;
+  --color-gold: #E8A93B;
+
+  /* ── Extended Colors (from inline styles) ── */
+  --color-flare-muted: #FCEBE9;
+  --color-flare-bg: rgba(240, 64, 42, 0.1);
+  --color-nav-inactive: #3a3d42;
+  --color-avatar-bg: #E9EBEA;
+  --color-overlay: rgba(22, 24, 28, 0.4);
+  --color-border-light: rgba(0, 0, 0, 0.08);
+  --color-border-medium: rgba(0, 0, 0, 0.12);
+  --color-border-dashed: rgba(0, 0, 0, 0.14);
+  --color-ratio-badge-bg: rgba(22, 24, 28, 0.85);
+
+  /* ── Fonts ── */
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* ── Spacing / Sizing ── */
+  --sidebar-width: 208px;
+
+  /* ── Radii ── */
+  --radius-card: 16px;
+  --radius-button: 10px;
+  --radius-pill: 20px;
+  --radius-badge: 5px;
+
+  /* ── Shadows ── */
+  --shadow-popup: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-modal: 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Base Styles ── */
+body {
+  background: var(--color-studio);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+/* ── Spinner Animation (from prototype) ── */
+@keyframes thumby-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-thumby-spin {
+  animation: thumby-spin 0.8s linear infinite;
+}
