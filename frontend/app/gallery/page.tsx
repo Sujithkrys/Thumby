@@ -24,25 +24,17 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
   // Base query
   let query = supabase
     .from("gallery_thumbnails")
-    .select("*, categories(name, slug)")
+    .select("*, categories(name)")
     .eq("is_active", true);
 
   // Apply category filter
   if (category !== "all") {
-    const { data: catData } = await supabase
-      .from("categories")
-      .select("id")
-      .eq("slug", category)
-      .single();
-      
-    if (catData) {
-      query = query.eq("category_id", catData.id);
-    }
+    query = query.eq("category_id", category);
   }
 
   // Apply sort
   if (sort === "featured") {
-    query = query.order("is_featured", { ascending: false }).order("created_at", { ascending: false });
+    query = query.order("favourite_count", { ascending: false }).order("created_at", { ascending: false });
   } else if (sort === "newest") {
     query = query.order("created_at", { ascending: false });
   } else if (sort === "popular") {
@@ -63,10 +55,10 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
     prompt: t.prompt,
     aspectRatio: t.aspect_ratio,
     categoryId: t.category_id,
-    categorySlug: t.categories?.slug || "unknown",
+    categorySlug: t.category_id, // category_id is the slug now
     uploadedBy: t.uploaded_by,
     favouriteCount: t.favourite_count,
-    isFeatured: t.is_featured,
+    isFeatured: false, // removed from db
     isActive: t.is_active,
     createdAt: t.created_at,
   }));
