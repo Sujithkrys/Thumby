@@ -58,6 +58,13 @@ async def generate_thumbnail(request: GenerateRequest):
             detail=f"Invalid aspect ratio. Must be one of: {', '.join(ASPECT_RATIO_SIZES.keys())}",
         )
 
+    # 4. Check rights confirmed if upload
+    if request.reference_type == "upload" and not request.rights_confirmed:
+        raise HTTPException(
+            status_code=403,
+            detail="You must confirm you have rights to use the uploaded reference image."
+        )
+
     # 4. Generate image via OpenAI
     image_bytes = await generate_image(
         prompt=request.prompt,

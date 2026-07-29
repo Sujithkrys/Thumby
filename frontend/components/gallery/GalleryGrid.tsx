@@ -25,23 +25,25 @@ export function GalleryGrid({ initialThumbnails = [] }: GalleryGridProps) {
     router.push("/generate");
   };
 
+  if (initialThumbnails.length === 0) {
+    return (
+      <p className="text-[13px] text-slate text-center py-8">
+        No thumbnails found for this filter.
+      </p>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(155px,1fr))] gap-[14px]">
-      {initialThumbnails.length === 0 ? (
-        <p className="col-span-full text-[13px] text-slate text-center py-8">
-          No thumbnails found for this filter.
-        </p>
-      ) : (
-        initialThumbnails.map((item) => (
-          <ThumbnailCard 
-            key={item.id} 
-            item={item} 
-            isFav={favourites.has(item.id)} 
-            onToggleFav={() => toggleFav(item.id)} 
-            onUse={handleUse} 
-          />
-        ))
-      )}
+    <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-[14px]">
+      {initialThumbnails.map((item) => (
+        <ThumbnailCard 
+          key={item.id} 
+          item={item} 
+          isFav={favourites.has(item.id)} 
+          onToggleFav={() => toggleFav(item.id)} 
+          onUse={handleUse} 
+        />
+      ))}
     </div>
   );
 }

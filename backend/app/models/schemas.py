@@ -14,14 +14,17 @@ class GenerateRequest(BaseModel):
     aspect_ratio: Literal["16:9", "9:16", "1:1"] = Field(
         default="16:9", description="Output aspect ratio"
     )
-    quality_tier: Literal["low", "medium", "high"] = Field(
-        default="medium", description="Generation quality tier"
+    quality_tier: Literal["standard", "hd"] = Field(
+        default="standard", description="Generation quality tier"
     )
     reference_type: Literal["gallery", "upload", "none"] = Field(
         default="none", description="Type of reference image"
     )
     reference_url: Optional[str] = Field(
         default=None, description="URL of the reference image (gallery or uploaded)"
+    )
+    rights_confirmed: bool = Field(
+        default=False, description="Whether the user has confirmed they have rights to the upload reference"
     )
 
 

@@ -25,7 +25,7 @@ export function SettingsModal({
   onTabChange,
   onClose,
 }: SettingsModalProps) {
-  const { generations } = useStore();
+  const { user, generations } = useStore();
 
   return (
     <div
@@ -73,7 +73,7 @@ export function SettingsModal({
                 Profile
               </span>
               <p className="font-body text-[14px] text-slate mb-6 pb-6 border-b border-border-light">
-                test@thumby.app &middot; {generations.length}/20 generations used
+                {user?.email || "Not logged in"} &middot; {generations.length}/20 generations used
               </p>
               
               <h3 className="font-heading font-medium text-[16px] text-ink mb-4">Your Generations</h3>
@@ -87,7 +87,7 @@ export function SettingsModal({
                       className="rounded-[12px] overflow-hidden border border-border-light shadow-sm"
                     >
                       <img
-                        src={g.img}
+                        src={g.imageUrl || ""}
                         alt={g.prompt}
                         className="w-full aspect-video object-cover block"
                       />
@@ -109,7 +109,7 @@ export function SettingsModal({
                   Email Address
                 </label>
                 <input
-                  value="test@thumby.app"
+                  value={user?.email || ""}
                   readOnly
                   className="w-full text-[14px] p-3 rounded-[8px] border border-border-medium bg-studio text-slate mb-2 box-border outline-none"
                 />
@@ -117,7 +117,15 @@ export function SettingsModal({
               </div>
               
               <div className="pt-6 border-t border-border-light">
-                <button className="flex items-center gap-2 px-4 py-2.5 rounded-[8px] border border-border-medium bg-white text-ink font-medium text-[14px] cursor-pointer hover:bg-studio transition-colors shadow-sm">
+                <button 
+                  onClick={async () => {
+                    const { createClient } = await import("@/lib/supabase-client");
+                    const supabase = createClient();
+                    await supabase.auth.signOut();
+                    window.location.href = "/gallery";
+                  }}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-[8px] border border-border-medium bg-white text-ink font-medium text-[14px] cursor-pointer hover:bg-studio transition-colors shadow-sm"
+                >
                   <LogOut size={16} aria-hidden="true" />
                   Log out of all devices
                 </button>

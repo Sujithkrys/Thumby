@@ -3,28 +3,30 @@
 import { useState, useEffect } from "react";
 import { GenerateForm } from "@/components/generate/GenerateForm";
 import { PreviewPanel } from "@/components/generate/PreviewPanel";
+import { generateThumbnail, uploadReferenceImage } from "@/lib/api-client";
+import { createClient } from "@/lib/supabase-client";
 import { useStore } from "@/lib/store";
 
 export function GenerateClient() {
   const [prompt, setPrompt] = useState("");
   const [refType, setRefType] = useState<"gallery" | "upload" | "none">("none");
   const [refItem, setRefItem] = useState<any>(null);
-  const [ratio, setRatio] = useState("16:9");
-  const [quality, setQuality] = useState("medium");
+  const [ratio, setRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
+  const [quality, setQuality] = useState<"standard" | "hd">("standard");
   const [rightsOk, setRightsOk] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
 
   const { generations, addGeneration, draftReference, setDraftReference } = useStore();
+  const supabase = createClient();
   const GEN_CAP = 20;
 
   useEffect(() => {
     if (draftReference) {
       setRefType("gallery");
       setRefItem(draftReference);
-      setRatio(draftReference.aspectRatio || "16:9");
-      // Clear it so it doesn't override next time they visit manually
+      setRatio(draftReference.aspectRatio as "16:9" | "9:16" | "1:1");
       setDraftReference(null);
     }
   }, [draftReference, setDraftReference]);
@@ -47,21 +49,52 @@ export function GenerateClient() {
     setLoading(true);
     setResult(null);
 
-    // Mock generation from prototype
-    setTimeout(() => {
-      const seed = Math.floor(Math.random() * 10000);
-      const [w, h] = ratio === "9:16" ? [360, 640] : ratio === "1:1" ? [500, 500] : [640, 360];
-      const gen = { 
-        id: `gen${Date.now()}`, 
-        prompt, 
-        ratio, 
-        img: `https://picsum.photos/seed/gen${seed}/${w}/${h}` 
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setError("You must be logged in to generate thumbnails.");
+        setLoading(false);
+        return;
+      }
+
+      let referenceUrl = undefined;
+      
+      if (refType === "gallery" && refItem?.imageUrl) {
+        referenceUrl = refItem.imageUrl;
+      } else if (refType === "upload" && refItem) {
+        // refItem is a File here (assuming GenerateForm sets it as such)
+        referenceUrl = await uploadReferenceImage(refItem, session.access_token);
+      }
+
+      const res = await generateThumbnail({
+        prompt,
+        aspectRatio: ratio,
+        qualityTier: quality,
+        referenceType: refType,
+        referenceUrl,
+        rightsConfirmed: rightsOk,
+      }, session.access_token);
+      
+      const newGen = {
+        id: res.id,
+        userId: session.user.id,
+        prompt,
+        aspectRatio: ratio,
+        referenceType: refType,
+        referenceUrl,
+        qualityTier: quality,
+        status: res.status,
+        imageUrl: res.imageUrl,
+        createdAt: new Date().toISOString(),
       };
       
-      setResult(gen);
-      addGeneration(gen);
+      setResult(newGen);
+      addGeneration(newGen);
+    } catch (err: any) {
+      setError(err.message || "Failed to generate thumbnail.");
+    } finally {
       setLoading(false);
-    }, 1800);
+    }
   }
 
   return (

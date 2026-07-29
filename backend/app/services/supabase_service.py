@@ -71,10 +71,16 @@ async def check_generation_cap(user_id: str) -> bool:
 
 async def increment_generation_count(user_id: str) -> None:
     """Increment the user's generation count by 1."""
-    supabase.rpc(
-        "increment_generation_count",
-        {"user_id_input": user_id},
-    ).execute()
+    profile = (
+        supabase.table("profiles")
+        .select("generation_count")
+        .eq("id", user_id)
+        .single()
+        .execute()
+    )
+    if profile.data:
+        new_count = profile.data["generation_count"] + 1
+        supabase.table("profiles").update({"generation_count": new_count}).eq("id", user_id).execute()
 
 
 async def create_generation_record(

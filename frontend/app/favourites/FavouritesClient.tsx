@@ -22,7 +22,7 @@ export function FavouritesClient() {
       const supabase = createClient();
       const { data } = await supabase
         .from("gallery_thumbnails")
-        .select("*, categories(slug)")
+        .select("*, categories(name)")
         .in("id", Array.from(favourites));
         
       if (data) {
@@ -33,10 +33,10 @@ export function FavouritesClient() {
           prompt: t.prompt,
           aspectRatio: t.aspect_ratio,
           categoryId: t.category_id,
-          categorySlug: t.categories?.slug || "unknown",
+          categorySlug: t.category_id, // category_id is the slug now
           uploadedBy: t.uploaded_by,
           favouriteCount: t.favourite_count,
-          isFeatured: t.is_featured,
+          isFeatured: false,
           isActive: t.is_active,
           createdAt: t.created_at,
         }));

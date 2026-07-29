@@ -13,12 +13,24 @@ interface UserPopupProps {
  * Menu items: Profile (→ settings modal, Profile tab),
  * Settings (→ settings modal, Account tab), Log out.
  */
+import { useStore } from "@/lib/store";
+import { createClient } from "@/lib/supabase-client";
+import { useRouter } from "next/navigation";
+
 export function UserPopup({ isExpanded = true }: UserPopupProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<"profile" | "account">(
-    "profile"
-  );
+  const [settingsTab, setSettingsTab] = useState<"profile" | "account">("profile");
+  
+  const { user, profile } = useStore();
+  const supabase = createClient();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setMenuOpen(false);
+    router.push("/gallery");
+  };
 
   function openSettings(tab: "profile" | "account") {
     setSettingsTab(tab);
@@ -56,7 +68,7 @@ export function UserPopup({ isExpanded = true }: UserPopupProps) {
               Settings
             </button>
             <button
-              onClick={() => setMenuOpen(false)}
+              onClick={handleLogout}
               className="flex items-center gap-[9px] w-full px-[10px] py-2 rounded-[8px] border-none bg-transparent cursor-pointer font-body text-[12.5px] text-ink text-left hover:bg-studio"
             >
               <LogOut size={14} className="text-slate" aria-hidden="true" />
@@ -68,20 +80,35 @@ export function UserPopup({ isExpanded = true }: UserPopupProps) {
 
       {/* User row button */}
       <button
-        onClick={() => setMenuOpen((v) => !v)}
+        onClick={() => {
+          if (user) setMenuOpen((v) => !v);
+          else window.location.href = "/auth/login";
+        }}
         className={`flex items-center gap-[9px] border-none rounded-[10px] cursor-pointer transition-colors ${
           menuOpen ? "bg-studio" : "bg-transparent hover:bg-studio"
         } ${isExpanded ? "p-[6px] w-full" : "p-[6px] w-10 h-10 justify-center"}`}
-        title={!isExpanded ? "Test user" : undefined}
+        title={!isExpanded ? (user ? (user.user_metadata?.name || user.email) : "Log in") : undefined}
       >
-        <div className="w-[26px] h-[26px] rounded-full bg-avatar-bg flex items-center justify-center text-[11px] font-body font-semibold text-slate shrink-0">
-          TU
+        <div className="w-[26px] h-[26px] rounded-full bg-avatar-bg flex items-center justify-center text-[11px] font-body font-semibold text-slate shrink-0 overflow-hidden">
+          {user ? (
+            profile?.profile_picture ? (
+              <img src={profile.profile_picture} alt="avatar" className="w-full h-full object-cover" />
+            ) : (
+              (user.user_metadata?.name || user.email || "?").charAt(0).toUpperCase()
+            )
+          ) : (
+            "?"
+          )}
         </div>
-        {isExpanded && <span className="font-body text-[12.5px] text-ink">Test user</span>}
+        {isExpanded && (
+          <span className="font-body text-[12.5px] text-ink truncate flex-1 text-left">
+            {user ? (user.user_metadata?.name || user.email?.split("@")[0]) : "Log in"}
+          </span>
+        )}
       </button>
 
       {/* Settings modal */}
-      {settingsOpen && (
+      {settingsOpen && user && (
         <SettingsModal
           activeTab={settingsTab}
           onTabChange={setSettingsTab}

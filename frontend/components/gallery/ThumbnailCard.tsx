@@ -30,55 +30,57 @@ export function ThumbnailCard({
   onToggleFav,
   onUse,
 }: ThumbnailCardProps) {
+  const aspectRatioString = item.aspectRatio.replace(":", "/");
+
   return (
-    <div className="bg-white border border-border-light rounded-[--radius-card] overflow-hidden">
-      {/* Image area */}
-      <div className="relative">
-        <button
-          onClick={() => onUse(item)}
-          className="block w-full p-0 border-none cursor-pointer bg-none"
-        >
-          <img
-            src={item.imageUrl}
-            alt={item.title}
-            className="w-full h-[128px] object-cover block bg-studio"
-          />
-        </button>
+    <div 
+      className="relative group break-inside-avoid mb-[14px] rounded-[--radius-card] overflow-hidden cursor-pointer bg-studio"
+      onClick={() => onUse(item)}
+      style={{ aspectRatio: aspectRatioString }}
+    >
+      <img
+        src={item.imageUrl}
+        alt={item.title}
+        className="absolute inset-0 w-full h-full object-cover block"
+      />
 
-        {/* Aspect ratio badge */}
-        <span className="absolute top-[9px] left-[9px] bg-ratio-badge-bg text-studio font-mono text-[11px] px-[7px] py-[3px] rounded-[--radius-badge] pointer-events-none">
-          {item.aspectRatio}
-        </span>
-
-        {/* Favourite star */}
-        <span
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFav(item.id);
-          }}
-          className="absolute top-[9px] right-[9px] cursor-pointer leading-none"
-        >
-          <Star
-            size={17}
-            fill={isFav ? "var(--color-gold)" : "none"}
-            color={isFav ? "var(--color-gold)" : "white"}
-            style={{ filter: "drop-shadow(0 0 1px rgba(0,0,0,0.5))" }}
-          />
-        </span>
-      </div>
-
-      {/* Card body */}
-      <div className="p-[11px_13px]">
-        <p className="font-body font-semibold text-[13px] text-ink m-0 mb-[6px]">
-          {item.title}
-        </p>
-        <div className="flex justify-between items-center">
-          <span className="border border-slate text-slate text-[11px] px-2 py-[2px] rounded-[--radius-pill] font-body">
-            {CATEGORY_LABELS[item.categorySlug] || item.categorySlug}
+      {/* Hover Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 pointer-events-auto">
+        
+        {/* Top area */}
+        <div className="flex justify-between items-start">
+          <span className="bg-black/30 backdrop-blur-md text-white font-mono text-[11px] px-[7px] py-[3px] rounded-[--radius-badge]">
+            {item.aspectRatio}
           </span>
-          <span className="font-body text-[11px] text-slate">
-            {item.favouriteCount}% liked
-          </span>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFav(item.id);
+            }}
+            className="p-1.5 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md transition-colors border-none flex items-center justify-center cursor-pointer"
+          >
+            <Star
+              size={17}
+              fill={isFav ? "var(--color-gold)" : "none"}
+              color={isFav ? "var(--color-gold)" : "white"}
+            />
+          </button>
+        </div>
+
+        {/* Bottom area */}
+        <div>
+          <p className="font-body font-semibold text-[14px] text-white m-0 mb-1 leading-tight line-clamp-2">
+            {item.title}
+          </p>
+          <div className="flex justify-between items-center mt-2">
+            <span className="bg-white/20 backdrop-blur-md text-white text-[11px] px-2 py-[2px] rounded-[--radius-pill] font-body">
+              {CATEGORY_LABELS[item.categorySlug] || item.categorySlug}
+            </span>
+            <span className="font-body text-[11px] text-white/80">
+              {item.favouriteCount} likes
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -29,6 +29,7 @@ export async function generateThumbnail(
       quality_tier: request.qualityTier,
       reference_type: request.referenceType,
       reference_url: request.referenceUrl,
+      rights_confirmed: request.rightsConfirmed,
     }),
   });
 
@@ -60,6 +61,34 @@ export async function uploadReferenceImage(
   formData.append("access_token", accessToken);
 
   const response = await fetch(`${API_URL}/api/upload-reference`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(
+      error.detail || `Upload failed with status ${response.status}`
+    );
+  }
+
+  const data = await response.json();
+  return data.url;
+}
+
+/**
+ * Upload a gallery thumbnail image via the FastAPI backend (founders only).
+ * Returns the R2 URL of the uploaded image.
+ */
+export async function uploadGalleryImage(
+  file: File,
+  accessToken: string
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("access_token", accessToken);
+
+  const response = await fetch(`${API_URL}/api/internal/upload-gallery`, {
     method: "POST",
     body: formData,
   });
