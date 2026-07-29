@@ -38,7 +38,7 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased bg-studio text-ink font-body`}
       >
         <StoreProvider>
-          <div className="flex min-h-screen">
+          <div className="flex h-screen overflow-hidden">
             <Sidebar />
             <main className="flex-1 p-[22px] min-w-0 overflow-auto">
               {children}
