@@ -12,39 +12,35 @@ const QUALITIES = [
   { value: "high", label: "High" },
 ] as const;
 
-/**
- * Generate form panel — left column of the generate view (340px).
- * Contains: prompt textarea, reference selector, aspect ratio buttons,
- * quality buttons, error display, generate button.
- */
-export function GenerateForm() {
-  const [prompt, setPrompt] = useState("");
-  const [refType, setRefType] = useState<"gallery" | "upload" | "none">("none");
-  const [ratio, setRatio] = useState("16:9");
-  const [quality, setQuality] = useState("medium");
-  const [rightsOk, setRightsOk] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+interface GenerateFormProps {
+  prompt: string;
+  setPrompt: (v: string) => void;
+  refType: "gallery" | "upload" | "none";
+  setRefType: (v: "gallery" | "upload" | "none") => void;
+  ratio: string;
+  setRatio: (v: string) => void;
+  quality: string;
+  setQuality: (v: string) => void;
+  rightsOk: boolean;
+  setRightsOk: (v: boolean) => void;
+  loading: boolean;
+  error: string;
+  handleGenerate: () => void;
+  remaining: number;
+  refItem: any;
+}
 
-  const remaining = 20; // TODO: Wire to actual generation count
-
-  async function handleGenerate() {
-    if (!prompt.trim()) {
-      setError("Write a prompt before generating.");
-      return;
-    }
-    if (refType === "upload" && !rightsOk) {
-      setError(
-        "Confirm this image is yours or you have permission to use it."
-      );
-      return;
-    }
-    setError("");
-    setLoading(true);
-
-    // TODO: Call FastAPI /api/generate endpoint
-    setTimeout(() => setLoading(false), 1800);
-  }
+export function GenerateForm({
+  prompt, setPrompt,
+  refType, setRefType,
+  ratio, setRatio,
+  quality, setQuality,
+  rightsOk, setRightsOk,
+  loading, error,
+  handleGenerate,
+  remaining,
+  refItem
+}: GenerateFormProps) {
 
   return (
     <div className="w-[340px] shrink-0 bg-white border border-border-light rounded-[--radius-card] p-5">
@@ -98,7 +94,7 @@ export function GenerateForm() {
       </div>
 
       {/* Reference content */}
-      <ReferenceSelector refType={refType} />
+      <ReferenceSelector refType={refType} refItem={refItem} />
 
       {/* Upload rights checkbox */}
       {refType === "upload" && (

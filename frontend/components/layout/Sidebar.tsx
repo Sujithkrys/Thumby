@@ -6,6 +6,7 @@ import { Home, Sparkles, Star } from "lucide-react";
 import { NavItem } from "./NavItem";
 import { GenerationCounter } from "./GenerationCounter";
 import { UserPopup } from "@/components/account/UserPopup";
+import { useStore } from "@/lib/store";
 
 const NAV_ITEMS = [
   { href: "/gallery", label: "Gallery", icon: Home },
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
  */
 export function Sidebar() {
   const pathname = usePathname();
+  const { favourites, generations } = useStore();
 
   return (
     <aside className="w-[--sidebar-width] bg-white border-r border-border-light p-[18px_12px] flex flex-col gap-[3px] shrink-0 box-border">
@@ -39,12 +41,13 @@ export function Sidebar() {
           label={label}
           icon={icon}
           active={pathname === href}
+          badge={href === "/favourites" ? favourites.size : undefined}
         />
       ))}
 
       {/* Spacer + bottom section */}
       <div className="mt-auto pt-4">
-        <GenerationCounter used={0} cap={20} />
+        <GenerationCounter used={generations.length} cap={20} />
         <UserPopup />
       </div>
     </aside>

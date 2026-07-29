@@ -1,6 +1,7 @@
 "use client";
 
 import { User, Settings as SettingsIcon, LogOut, X } from "lucide-react";
+import { useStore } from "@/lib/store";
 
 interface SettingsModalProps {
   activeTab: "profile" | "account";
@@ -24,6 +25,8 @@ export function SettingsModal({
   onTabChange,
   onClose,
 }: SettingsModalProps) {
+  const { generations } = useStore();
+
   return (
     <div
       className="fixed inset-0 bg-overlay flex items-center justify-center z-30"
@@ -70,10 +73,26 @@ export function SettingsModal({
                 Profile
               </span>
               <p className="font-mono text-[11px] text-slate mb-4">
-                test@thumby.app &middot; 0/20 generations used
+                test@thumby.app &middot; {generations.length}/20 generations used
               </p>
-              {/* TODO: Generation history grid */}
-              <p className="text-[13px] text-slate">No generations yet.</p>
+              {generations.length === 0 ? (
+                <p className="text-[13px] text-slate">No generations yet.</p>
+              ) : (
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(110px,1fr))] gap-[10px]">
+                  {generations.map((g) => (
+                    <div
+                      key={g.id}
+                      className="rounded-[10px] overflow-hidden border border-border-light"
+                    >
+                      <img
+                        src={g.img}
+                        alt={g.prompt}
+                        className="w-full h-[70px] object-cover block"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

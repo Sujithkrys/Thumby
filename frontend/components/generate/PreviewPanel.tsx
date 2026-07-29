@@ -3,21 +3,17 @@
 import { ImageIcon, Flag } from "lucide-react";
 
 interface PreviewPanelProps {
-  ratio?: "16:9" | "9:16" | "1:1";
-  resultImageUrl?: string | null;
+  ratio?: string;
+  result?: { img: string } | null;
 }
 
-function getAspectRatio(ratio: "16:9" | "9:16" | "1:1"): string {
+function getAspectRatio(ratio: string): string {
   if (ratio === "9:16") return "9 / 16";
   if (ratio === "1:1") return "1 / 1";
   return "16 / 9";
 }
 
-/**
- * Preview panel — right column of the generate view.
- * Shows dashed placeholder before generation, generated image after.
- */
-export function PreviewPanel({ ratio = "16:9", resultImageUrl = null }: PreviewPanelProps) {
+export function PreviewPanel({ ratio = "16:9", result = null }: PreviewPanelProps) {
   const aspectRatio = getAspectRatio(ratio);
 
   return (
@@ -27,10 +23,10 @@ export function PreviewPanel({ ratio = "16:9", resultImageUrl = null }: PreviewP
       </span>
 
       <div className="flex-1 flex items-center justify-center">
-        {resultImageUrl ? (
+        {result ? (
           <div className="w-full max-w-[440px]">
             <img
-              src={resultImageUrl}
+              src={result.img}
               alt="Generated thumbnail"
               className="w-full object-cover rounded-[12px] block mb-[10px]"
               style={{ aspectRatio }}

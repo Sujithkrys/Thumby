@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GalleryGrid } from "@/components/gallery/GalleryGrid";
+import { FavouritesClient } from "./FavouritesClient";
 
 export const metadata: Metadata = {
   title: "Favourites — Thumby",
@@ -16,15 +16,7 @@ export default function FavouritesPage() {
       <h1 className="font-heading font-semibold text-[19px] text-ink mb-4">
         Favourites
       </h1>
-
-      {/* Placeholder: empty state or filtered grid */}
-      <p className="text-[13px] text-slate">
-        Nothing favourited yet &mdash; star a thumbnail in the gallery to save
-        it here.
-      </p>
-
-      {/* TODO: Replace with favourites-filtered GalleryGrid */}
-      {/* <GalleryGrid favouritesOnly /> */}
+      <FavouritesClient />
     </div>
   );
 }

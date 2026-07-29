@@ -2,6 +2,8 @@
 
 import { ThumbnailCard } from "./ThumbnailCard";
 import type { GalleryThumbnail } from "@/lib/types";
+import { useStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
 
 /**
  * Gallery grid — responsive card layout.
@@ -15,13 +17,12 @@ interface GalleryGridProps {
 }
 
 export function GalleryGrid({ initialThumbnails = [] }: GalleryGridProps) {
-  // In Phase 1 we don't have auth, so we just mock favourite actions
-  const handleToggleFav = (id: string) => {
-    console.log("Toggle fav clicked for", id);
-  };
+  const { favourites, toggleFav, setDraftReference } = useStore();
+  const router = useRouter();
   
   const handleUse = (item: GalleryThumbnail) => {
-    console.log("Use clicked for", item);
+    setDraftReference(item);
+    router.push("/generate");
   };
 
   return (
@@ -35,8 +36,8 @@ export function GalleryGrid({ initialThumbnails = [] }: GalleryGridProps) {
           <ThumbnailCard 
             key={item.id} 
             item={item} 
-            isFav={false} 
-            onToggleFav={handleToggleFav} 
+            isFav={favourites.has(item.id)} 
+            onToggleFav={() => toggleFav(item.id)} 
             onUse={handleUse} 
           />
         ))

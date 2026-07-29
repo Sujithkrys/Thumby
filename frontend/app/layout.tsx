@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { StoreProvider } from "@/lib/store";
 
 const inter = Inter({
   variable: "--font-body",
@@ -22,9 +23,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Thumby — AI Thumbnail Generator",
-  description:
-    "Generate professional YouTube and Instagram thumbnails with AI. Browse proven designs, customize with your own prompts, and create eye-catching thumbnails in seconds.",
+  title: "Thumby — AI Thumbnails",
+  description: "Browse and generate high-converting YouTube thumbnails.",
 };
 
 export default function RootLayout({
@@ -33,15 +33,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex">
-        <Sidebar />
-        <main className="flex-1 p-[22px] min-w-0 overflow-auto">
-          {children}
-        </main>
+    <html lang="en">
+      <body
+        className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased bg-studio text-ink font-body`}
+      >
+        <StoreProvider>
+          <div className="flex min-h-screen">
+            <Sidebar />
+            <main className="flex-1 p-[22px] min-w-0 overflow-auto">
+              {children}
+            </main>
+          </div>
+        </StoreProvider>
       </body>
     </html>
   );
