@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const SORT_OPTIONS = [
   { key: "featured", label: "Featured" },
@@ -13,14 +13,22 @@ const SORT_OPTIONS = [
  * Right-aligned pill-group style with ink-bg active state.
  */
 export function SortTabs() {
-  const [activeSort, setActiveSort] = useState<string>("featured");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeSort = searchParams.get("sort") || "featured";
+
+  const handleSort = (key: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sort", key);
+    router.push(`?${params.toString()}`);
+  };
 
   return (
     <div className="flex gap-1 bg-white p-1 rounded-[10px] border border-border-light">
       {SORT_OPTIONS.map(({ key, label }) => (
         <button
           key={key}
-          onClick={() => setActiveSort(key)}
+          onClick={() => handleSort(key)}
           className={`px-[13px] py-[6px] rounded-[8px] text-[12.5px] font-body cursor-pointer border-none transition-colors ${
             activeSort === key
               ? "bg-ink text-studio font-semibold"
