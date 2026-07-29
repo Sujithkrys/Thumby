@@ -35,10 +35,13 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedRoutes = ["/generate", "/favourites", "/internal/add-thumbnail", "/gallery"];
+  const protectedRoutes = ["/generate", "/favourites", "/internal/add-thumbnail"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
+  
+  // Gallery is public, but if logged in, we still want to enforce onboarding
+  const isGalleryRoute = request.nextUrl.pathname.startsWith("/gallery");
   const isOnboardingRoute = request.nextUrl.pathname === "/onboarding";
 
   if (!user) {
@@ -51,8 +54,8 @@ export async function middleware(request: NextRequest) {
     // User is logged in
     const hasOnboarded = user.user_metadata?.onboarded === true;
     
-    if (!hasOnboarded && isProtectedRoute) {
-      // Force onboarding
+    // Force onboarding if they are on a protected route OR the gallery
+    if (!hasOnboarded && (isProtectedRoute || isGalleryRoute)) {
       const url = request.nextUrl.clone();
       url.pathname = "/onboarding";
       return NextResponse.redirect(url);
