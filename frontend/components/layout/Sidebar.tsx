@@ -58,29 +58,25 @@ export function Sidebar() {
       </div>
 
       {/* Navigation items */}
-      {isExpanded && (
-        <div className="flex flex-col gap-[3px]">
-          {NAV_ITEMS.map(({ href, label, icon }) => (
-            <NavItem
-              key={href}
-              href={href}
-              label={label}
-              icon={icon}
-              active={pathname === href}
-              badge={href === "/favourites" ? favourites.size : undefined}
-              isExpanded={isExpanded}
-            />
-          ))}
-        </div>
-      )}
+      <div className={`flex flex-col gap-[3px] ${isExpanded ? "" : "w-full items-center"}`}>
+        {NAV_ITEMS.map(({ href, label, icon }) => (
+          <NavItem
+            key={href}
+            href={href}
+            label={label}
+            icon={icon}
+            active={pathname === href}
+            badge={href === "/favourites" ? favourites.size : undefined}
+            isExpanded={isExpanded}
+          />
+        ))}
+      </div>
 
       {/* Spacer + bottom section */}
-      {isExpanded && (
-        <div className="mt-auto pt-4">
-          <GenerationCounter used={generations.length} cap={20} isExpanded={isExpanded} />
-          <UserPopup isExpanded={isExpanded} />
-        </div>
-      )}
+      <div className={`mt-auto pt-4 ${isExpanded ? "" : "w-full flex flex-col items-center"}`}>
+        <GenerationCounter used={generations.length} cap={20} isExpanded={isExpanded} />
+        <UserPopup isExpanded={isExpanded} />
+      </div>
     </aside>
   );
 }
