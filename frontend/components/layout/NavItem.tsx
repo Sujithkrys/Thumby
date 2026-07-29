@@ -7,6 +7,7 @@ interface NavItemProps {
   icon: LucideIcon;
   active?: boolean;
   badge?: number;
+  isExpanded?: boolean;
 }
 
 /**
@@ -14,23 +15,32 @@ interface NavItemProps {
  * Active state: flare background (10% opacity) + flare text.
  * Inactive: transparent bg + nav-inactive text.
  */
-export function NavItem({ href, label, icon: Icon, active = false, badge }: NavItemProps) {
+export function NavItem({ href, label, icon: Icon, active = false, badge, isExpanded = true }: NavItemProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center gap-[10px] px-[10px] py-2 rounded-[9px] no-underline text-[13px] font-body transition-colors ${
-        active
-          ? "bg-flare-bg text-flare font-semibold"
-          : "bg-transparent text-nav-inactive font-normal hover:bg-studio"
+      className={`flex items-center transition-colors no-underline font-body ${
+        isExpanded
+          ? `gap-[10px] px-[10px] py-2 rounded-[9px] text-[13px] ${
+              active
+                ? "bg-flare-bg text-flare font-semibold"
+                : "bg-transparent text-nav-inactive font-normal hover:bg-studio"
+            }`
+          : `justify-center w-10 h-10 rounded-[8px] ${
+              active
+                ? "bg-flare-bg text-flare"
+                : "bg-transparent text-nav-inactive hover:bg-studio"
+            }`
       }`}
+      title={!isExpanded ? label : undefined}
     >
       <Icon
         size={16}
         className={active ? "text-flare" : "text-slate"}
         aria-hidden="true"
       />
-      {label}
-      {badge !== undefined && badge > 0 && (
+      {isExpanded && label}
+      {isExpanded && badge !== undefined && badge > 0 && (
         <span
           className={`ml-auto font-mono text-[10.5px] ${
             active ? "text-flare" : "text-slate"

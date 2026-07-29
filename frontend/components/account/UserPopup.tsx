@@ -4,12 +4,16 @@ import { useState } from "react";
 import { User, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { SettingsModal } from "./SettingsModal";
 
+interface UserPopupProps {
+  isExpanded?: boolean;
+}
+
 /**
  * User popup — triggered from user row at bottom of sidebar.
  * Menu items: Profile (→ settings modal, Profile tab),
  * Settings (→ settings modal, Account tab), Log out.
  */
-export function UserPopup() {
+export function UserPopup({ isExpanded = true }: UserPopupProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<"profile" | "account">(
@@ -65,14 +69,15 @@ export function UserPopup() {
       {/* User row button */}
       <button
         onClick={() => setMenuOpen((v) => !v)}
-        className={`flex items-center gap-[9px] p-[6px] w-full border-none rounded-[10px] cursor-pointer ${
+        className={`flex items-center gap-[9px] border-none rounded-[10px] cursor-pointer transition-colors ${
           menuOpen ? "bg-studio" : "bg-transparent hover:bg-studio"
-        }`}
+        } ${isExpanded ? "p-[6px] w-full" : "p-[6px] w-10 h-10 justify-center"}`}
+        title={!isExpanded ? "Test user" : undefined}
       >
         <div className="w-[26px] h-[26px] rounded-full bg-avatar-bg flex items-center justify-center text-[11px] font-body font-semibold text-slate shrink-0">
           TU
         </div>
-        <span className="font-body text-[12.5px] text-ink">Test user</span>
+        {isExpanded && <span className="font-body text-[12.5px] text-ink">Test user</span>}
       </button>
 
       {/* Settings modal */}
