@@ -34,6 +34,9 @@ export function SignupForm() {
     if (error) {
       setError(error.message);
       setLoading(false);
+    } else if (data.user && !data.session) {
+      setError("Success! Please check your email to confirm your account before logging in.");
+      setLoading(false);
     } else {
       // Assuming auto-confirm is enabled or we just let them log in
       router.push("/gallery");
