@@ -7,7 +7,7 @@ import { generateThumbnail, uploadReferenceImage } from "@/lib/api-client";
 import { createClient } from "@/lib/supabase-client";
 import { useStore } from "@/lib/store";
 
-export function GenerateClient({ initialInspirations = [] }: { initialInspirations?: any[] }) {
+export function GenerateClient() {
   const [prompt, setPrompt] = useState("");
   const [refType, setRefType] = useState<"gallery" | "upload" | "none">("none");
   const [refItem, setRefItem] = useState<any>(null);
@@ -97,11 +97,7 @@ export function GenerateClient({ initialInspirations = [] }: { initialInspiratio
     }
   }
 
-  const handleInspirationClick = (item: any) => {
-    setPrompt(item.prompt);
-    setRatio(item.aspect_ratio);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const recentGenerations = generations.slice(0, 8);
 
   return (
     <div className="w-full max-w-[1240px] mx-auto flex flex-col gap-8 pb-12">
@@ -123,31 +119,36 @@ export function GenerateClient({ initialInspirations = [] }: { initialInspiratio
         />
       </div>
 
-      {initialInspirations && initialInspirations.length > 0 && (
+      {recentGenerations.length > 0 && (
         <div className="w-full">
-          <h2 className="font-heading font-semibold text-[15px] text-ink">Need inspiration?</h2>
-          <p className="text-[13px] text-slate font-body mb-4">Start from a prompt that's already working.</p>
+          <h2 className="font-heading font-semibold text-[15px] text-ink mb-4">Recent generations</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {initialInspirations.map(item => (
+          <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+            {recentGenerations.map(gen => (
               <div 
-                key={item.id}
-                onClick={() => handleInspirationClick(item)}
-                className="bg-white border border-border-light rounded-[12px] p-[10px] cursor-pointer hover:border-ink transition-colors flex gap-3 shadow-sm items-center"
+                key={gen.id}
+                onClick={() => {
+                  if (gen.imageUrl) window.open(gen.imageUrl, '_blank');
+                }}
+                className="shrink-0 relative cursor-pointer group rounded-[12px] overflow-hidden border border-border-light shadow-sm bg-white p-1.5 hover:border-ink transition-colors"
+                style={{ width: '132px' }}
               >
-                <div className="relative w-[60px] h-[60px] shrink-0 rounded-[8px] overflow-hidden bg-studio flex items-center justify-center">
-                  <img 
-                    src={item.image_url} 
-                    className="max-w-full max-h-full object-cover"
-                    style={{ aspectRatio: item.aspect_ratio === '16:9' ? '16/9' : item.aspect_ratio === '9:16' ? '9/16' : '1/1' }}
-                    alt="" 
-                  />
-                </div>
-                <div className="flex flex-col flex-1 min-w-0">
-                  <span className="text-[10px] font-bold tracking-wider text-slate uppercase mb-[2px]">{item.category_id}</span>
-                  <p className="text-[12px] text-ink font-body line-clamp-2 leading-snug" title={item.prompt}>
-                    {item.prompt.length > 60 ? item.prompt.substring(0, 60) + '...' : item.prompt}
-                  </p>
+                <div 
+                  className="w-[120px] rounded-[8px] overflow-hidden bg-studio relative flex items-center justify-center"
+                  style={{ aspectRatio: gen.aspectRatio === '16:9' ? '16/9' : gen.aspectRatio === '9:16' ? '9/16' : '1/1' }}
+                >
+                  {gen.imageUrl ? (
+                    <img 
+                      src={gen.imageUrl} 
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      alt={gen.prompt} 
+                    />
+                  ) : (
+                    <span className="text-[11px] text-slate font-medium">Processing</span>
+                  )}
+                  <span className="absolute bottom-1.5 left-1.5 bg-ink/80 text-studio font-mono text-[10px] px-1.5 py-0.5 rounded-[4px] backdrop-blur-sm shadow-sm leading-none">
+                    {gen.aspectRatio}
+                  </span>
                 </div>
               </div>
             ))}
