@@ -110,3 +110,18 @@ async def create_generation_record(
         .execute()
     )
     return result.data[0]
+
+
+async def delete_user_account(user_id: str) -> None:
+    """Delete a user account and their associated data."""
+    # Delete favourites
+    supabase.table("favourites").delete().eq("user_id", user_id).execute()
+    
+    # Delete generations
+    supabase.table("generations").delete().eq("user_id", user_id).execute()
+    
+    # Delete profile
+    supabase.table("profiles").delete().eq("id", user_id).execute()
+    
+    # Finally, delete user from auth (Supabase Admin API)
+    supabase.auth.admin.delete_user(user_id)

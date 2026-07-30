@@ -14,6 +14,7 @@ interface StoreContextType {
   addGeneration: (gen: Generation) => void;
   draftReference: GalleryThumbnail | null;
   setDraftReference: (item: GalleryThumbnail | null) => void;
+  updateName: (newName: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -125,8 +126,33 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setGenerations((prev) => [gen, ...prev]);
   };
 
+  const updateName = async (newName: string) => {
+    if (!user) return;
+    
+    // Optimistic UI update
+    setProfile((prev: any) => prev ? { ...prev, name: newName } : null);
+    
+    // Also update user metadata in state
+    setUser((prev: any) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        user_metadata: {
+          ...(prev.user_metadata || {}),
+          name: newName
+        }
+      };
+    });
+
+    // Update Supabase Auth metadata
+    await supabase.auth.updateUser({ data: { name: newName } });
+    
+    // Update public.profiles table
+    await supabase.from("profiles").update({ name: newName }).eq("id", user.id);
+  };
+
   return (
-    <StoreContext.Provider value={{ user, profile, favourites, toggleFav, generations, addGeneration, draftReference, setDraftReference, loading }}>
+    <StoreContext.Provider value={{ user, profile, favourites, toggleFav, generations, addGeneration, draftReference, setDraftReference, updateName, loading }}>
       {children}
     </StoreContext.Provider>
   );

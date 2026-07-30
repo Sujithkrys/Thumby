@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 export function UserPopup({ isExpanded = true }: UserPopupProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<"profile" | "account">("profile");
+  const [settingsTab, setSettingsTab] = useState<"profile" | "account" | "usage">("profile");
   
   const { user, profile } = useStore();
   const supabase = createClient();
@@ -32,7 +32,7 @@ export function UserPopup({ isExpanded = true }: UserPopupProps) {
     router.push("/gallery");
   };
 
-  function openSettings(tab: "profile" | "account") {
+  function openSettings(tab: "profile" | "account" | "usage") {
     setSettingsTab(tab);
     setSettingsOpen(true);
     setMenuOpen(false);
