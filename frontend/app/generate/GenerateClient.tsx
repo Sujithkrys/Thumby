@@ -98,7 +98,7 @@ export function GenerateClient() {
   }
 
   return (
-    <div className="w-full max-w-[1240px] mx-auto flex gap-5 items-stretch min-h-[75vh]">
+    <div className="w-full max-w-[1240px] mx-auto flex gap-5 items-start">
       <GenerateForm 
         prompt={prompt} setPrompt={setPrompt}
         refType={refType} setRefType={setRefType}
