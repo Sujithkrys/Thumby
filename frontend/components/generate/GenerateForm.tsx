@@ -43,7 +43,7 @@ export function GenerateForm({
 }: GenerateFormProps) {
 
   return (
-    <div className="w-[340px] shrink-0 bg-white border border-border-light rounded-[--radius-card] p-5">
+    <div className="w-[340px] shrink-0 flex flex-col bg-white border border-border-light rounded-[--radius-card] p-5">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <span className="font-heading font-semibold text-[15px] text-ink">
@@ -154,7 +154,7 @@ export function GenerateForm({
       <button
         onClick={handleGenerate}
         disabled={loading}
-        className="w-full p-[13px] rounded-[11px] border-none bg-flare text-flare-muted font-body text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 transition-opacity disabled:opacity-70 disabled:cursor-default"
+        className="w-full p-[13px] mt-auto rounded-[11px] border-none bg-flare text-flare-muted font-body text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 transition-opacity disabled:opacity-70 disabled:cursor-default"
       >
         {loading && (
           <Loader2

@@ -4,7 +4,7 @@ import { ImageIcon, Flag } from "lucide-react";
 
 interface PreviewPanelProps {
   ratio?: string;
-  result?: { img: string } | null;
+  result?: { img?: string; imageUrl?: string } | null;
 }
 
 function getAspectRatio(ratio: string): string {
@@ -17,16 +17,16 @@ export function PreviewPanel({ ratio = "16:9", result = null }: PreviewPanelProp
   const aspectRatio = getAspectRatio(ratio);
 
   return (
-    <div className="flex-1 bg-white border border-border-light rounded-[--radius-card] p-6 flex flex-col min-h-[460px]">
+    <div className="flex-1 bg-white border border-border-light rounded-[--radius-card] p-6 flex flex-col">
       <span className="font-heading font-semibold text-[15px] text-ink mb-4">
         Preview
       </span>
 
       <div className="flex-1 flex items-center justify-center">
         {result ? (
-          <div className="w-full max-w-[440px]">
+          <div className="w-full max-w-[640px]">
             <img
-              src={result.img}
+              src={result.imageUrl || result.img}
               alt="Generated thumbnail"
               className="w-full object-cover rounded-[12px] block mb-[10px]"
               style={{ aspectRatio }}
@@ -42,13 +42,18 @@ export function PreviewPanel({ ratio = "16:9", result = null }: PreviewPanelProp
           </div>
         ) : (
           <div
-            className="w-full max-w-[440px] border-[1.5px] border-dashed border-border-dashed rounded-[12px] flex flex-col items-center justify-center gap-[10px] text-slate"
+            className="w-full max-w-[640px] border-[1.5px] border-dashed border-border-dashed rounded-[12px] flex flex-col items-center justify-center gap-[10px] text-slate"
             style={{ aspectRatio }}
           >
             <ImageIcon size={26} aria-hidden="true" />
-            <span className="text-[12.5px]">
-              Your thumbnail will appear here
-            </span>
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-[13px] font-medium text-ink">
+                Your thumbnail will appear here
+              </span>
+              <span className="text-[12px] text-slate font-body">
+                Write a prompt and hit Generate to see it here.
+              </span>
+            </div>
           </div>
         )}
       </div>
