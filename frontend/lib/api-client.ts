@@ -114,7 +114,7 @@ export async function addAdminThumbnail(
   prompt: string,
   categoryId: string,
   aspectRatio: string
-): Promise<any> {
+): Promise<Record<string, unknown>> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("admin_email", adminEmail);
@@ -141,7 +141,7 @@ export async function addAdminThumbnail(
 /**
  * Get thumbnails uploaded by a specific admin.
  */
-export async function getAdminThumbnails(adminEmail: string): Promise<any[]> {
+export async function getAdminThumbnails(adminEmail: string): Promise<Record<string, unknown>[]> {
   const response = await fetch(`${API_URL}/api/internal/thumbnails?admin_email=${encodeURIComponent(adminEmail)}`);
   
   if (!response.ok) {
@@ -165,7 +165,7 @@ export async function updateAdminThumbnail(
   prompt: string,
   categoryId: string,
   aspectRatio: string
-): Promise<any> {
+): Promise<Record<string, unknown>> {
   const formData = new FormData();
   formData.append("admin_email", adminEmail);
   formData.append("title", title);

@@ -26,7 +26,7 @@ export default function AddThumbnailPage() {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminError, setAdminError] = useState("");
 
-  const [thumbnails, setThumbnails] = useState<any[]>([]);
+  const [thumbnails, setThumbnails] = useState<Record<string, unknown>[]>([]);
   const [loadingThumbnails, setLoadingThumbnails] = useState(false);
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export default function AddThumbnailPage() {
     try {
       const data = await getAdminThumbnails(adminEmail);
       setThumbnails(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to fetch thumbnails:", err);
     } finally {
       setLoadingThumbnails(false);
@@ -73,8 +73,8 @@ export default function AddThumbnailPage() {
       setFile(null);
       // Refresh the list
       fetchThumbnails();
-    } catch (err: any) {
-      setError(err.message || "Failed to upload thumbnail.");
+    } catch (err: unknown) {
+      setError((err as Error).message || "Failed to upload thumbnail.");
     } finally {
       setLoading(false);
     }
@@ -96,17 +96,17 @@ export default function AddThumbnailPage() {
     try {
       await deleteAdminThumbnail(id, adminEmail);
       fetchThumbnails();
-    } catch (err: any) {
-      alert(err.message || "Failed to delete.");
+    } catch (err: unknown) {
+      alert((err as Error).message || "Failed to delete.");
     }
   };
 
-  const startEdit = (t: any) => {
-    setEditingId(t.id);
-    setEditTitle(t.title);
-    setEditPrompt(t.prompt);
-    setEditCategory(t.category_id);
-    setEditAspectRatio(t.aspect_ratio);
+  const startEdit = (t: Record<string, unknown>) => {
+    setEditingId(t.id as string);
+    setEditTitle(t.title as string);
+    setEditPrompt(t.prompt as string);
+    setEditCategory(t.category_id as string);
+    setEditAspectRatio(t.aspect_ratio as string);
   };
 
   const handleUpdate = async (id: string) => {
@@ -114,8 +114,8 @@ export default function AddThumbnailPage() {
       await updateAdminThumbnail(id, adminEmail, editTitle, editPrompt, editCategory, editAspectRatio);
       setEditingId(null);
       fetchThumbnails();
-    } catch (err: any) {
-      alert(err.message || "Failed to update.");
+    } catch (err: unknown) {
+      alert((err as Error).message || "Failed to update.");
     }
   };
 
