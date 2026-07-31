@@ -14,6 +14,8 @@ interface StoreContextType {
   addGeneration: (gen: Generation) => void;
   draftReference: GalleryThumbnail | null;
   setDraftReference: (item: GalleryThumbnail | null) => void;
+  draftPrompt: GalleryThumbnail | null;
+  setDraftPrompt: (item: GalleryThumbnail | null) => void;
   updateName: (newName: string) => Promise<void>;
   loading: boolean;
 }
@@ -26,6 +28,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [favourites, setFavourites] = useState<Set<string>>(new Set());
   const [generations, setGenerations] = useState<Generation[]>([]);
   const [draftReference, setDraftReference] = useState<GalleryThumbnail | null>(null);
+  const [draftPrompt, setDraftPrompt] = useState<GalleryThumbnail | null>(null);
   const [loading, setLoading] = useState(true);
 
   const supabase = createClient();
@@ -152,7 +155,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <StoreContext.Provider value={{ user, profile, favourites, toggleFav, generations, addGeneration, draftReference, setDraftReference, updateName, loading }}>
+    <StoreContext.Provider value={{ user, profile, favourites, toggleFav, generations, addGeneration, draftReference, setDraftReference, draftPrompt, setDraftPrompt, updateName, loading }}>
       {children}
     </StoreContext.Provider>
   );

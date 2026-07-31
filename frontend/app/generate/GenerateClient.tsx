@@ -18,7 +18,7 @@ export function GenerateClient() {
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
 
-  const { generations, addGeneration, draftReference, setDraftReference } = useStore();
+  const { generations, addGeneration, draftReference, setDraftReference, draftPrompt, setDraftPrompt } = useStore();
   const supabase = createClient();
   const GEN_CAP = 20;
 
@@ -29,7 +29,14 @@ export function GenerateClient() {
       setRatio(draftReference.aspectRatio as "16:9" | "9:16" | "1:1");
       setDraftReference(null);
     }
-  }, [draftReference, setDraftReference]);
+    if (draftPrompt) {
+      setPrompt(draftPrompt.prompt);
+      setRatio(draftPrompt.aspectRatio as "16:9" | "9:16" | "1:1");
+      setRefType("none");
+      setRefItem(null);
+      setDraftPrompt(null);
+    }
+  }, [draftReference, setDraftReference, draftPrompt, setDraftPrompt]);
 
   async function handleGenerate() {
     if (!prompt.trim()) {

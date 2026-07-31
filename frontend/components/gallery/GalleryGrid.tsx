@@ -4,6 +4,8 @@ import { ThumbnailCard } from "./ThumbnailCard";
 import type { GalleryThumbnail } from "@/lib/types";
 import { useStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ThumbnailDetailModal } from "./ThumbnailDetailModal";
 
 /**
  * Gallery grid — responsive card layout.
@@ -17,12 +19,22 @@ interface GalleryGridProps {
 }
 
 export function GalleryGrid({ initialThumbnails = [] }: GalleryGridProps) {
-  const { favourites, toggleFav, setDraftReference } = useStore();
+  const { favourites, toggleFav, setDraftReference, setDraftPrompt } = useStore();
   const router = useRouter();
+  const [selectedItem, setSelectedItem] = useState<GalleryThumbnail | null>(null);
   
-  const handleUse = (item: GalleryThumbnail) => {
-    setDraftReference(item);
-    router.push("/generate");
+  const handleUseAsPrompt = () => {
+    if (selectedItem) {
+      setDraftPrompt(selectedItem);
+      router.push("/generate");
+    }
+  };
+
+  const handleUseAsReference = () => {
+    if (selectedItem) {
+      setDraftReference(selectedItem);
+      router.push("/generate");
+    }
   };
 
   if (initialThumbnails.length === 0) {
@@ -34,16 +46,29 @@ export function GalleryGrid({ initialThumbnails = [] }: GalleryGridProps) {
   }
 
   return (
-    <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-[14px]">
-      {initialThumbnails.map((item) => (
-        <ThumbnailCard 
-          key={item.id} 
-          item={item} 
-          isFav={favourites.has(item.id)} 
-          onToggleFav={() => toggleFav(item.id)} 
-          onUse={handleUse} 
+    <>
+      <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-[14px]">
+        {initialThumbnails.map((item) => (
+          <ThumbnailCard 
+            key={item.id} 
+            item={item} 
+            isFav={favourites.has(item.id)} 
+            onToggleFav={() => toggleFav(item.id)} 
+            onClick={setSelectedItem} 
+          />
+        ))}
+      </div>
+      
+      {selectedItem && (
+        <ThumbnailDetailModal
+          item={selectedItem}
+          isFav={favourites.has(selectedItem.id)}
+          onToggleFav={toggleFav}
+          onUseAsPrompt={handleUseAsPrompt}
+          onUseAsReference={handleUseAsReference}
+          onClose={() => setSelectedItem(null)}
         />
-      ))}
-    </div>
+      )}
+    </>
   );
 }

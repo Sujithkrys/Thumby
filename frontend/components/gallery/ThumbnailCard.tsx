@@ -7,7 +7,7 @@ interface ThumbnailCardProps {
   item: GalleryThumbnail;
   isFav: boolean;
   onToggleFav: (id: string) => void;
-  onUse: (item: GalleryThumbnail) => void;
+  onClick: (item: GalleryThumbnail) => void;
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -28,14 +28,14 @@ export function ThumbnailCard({
   item,
   isFav,
   onToggleFav,
-  onUse,
+  onClick,
 }: ThumbnailCardProps) {
   const aspectRatioString = item.aspectRatio.replace(":", "/");
 
   return (
     <div 
       className="relative group break-inside-avoid mb-[14px] rounded-[--radius-card] overflow-hidden cursor-pointer bg-studio"
-      onClick={() => onUse(item)}
+      onClick={() => onClick(item)}
       style={{ aspectRatio: aspectRatioString }}
     >
       <img
