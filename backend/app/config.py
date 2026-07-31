@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     SUPABASE_SERVICE_ROLE_KEY: str
 
     # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    CORS_ORIGINS: list[str] = ["http://localhost:3000", "https://thumby.teamsvastrinots.workers.dev"]
 
     # Founder emails (comma-separated)
     FOUNDER_EMAILS: str = ""
