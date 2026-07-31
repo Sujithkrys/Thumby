@@ -125,3 +125,101 @@ async def delete_user_account(user_id: str) -> None:
     
     # Finally, delete user from auth (Supabase Admin API)
     supabase.auth.admin.delete_user(user_id)
+
+
+async def get_user_id_by_email(email: str) -> Optional[str]:
+    """Get a user's ID by their email from the profiles table."""
+    try:
+        profile = (
+            supabase.table("profiles")
+            .select("id")
+            .eq("email", email)
+            .single()
+            .execute()
+        )
+        if profile.data:
+            return profile.data["id"]
+        return None
+    except Exception:
+        return None
+
+
+async def insert_gallery_thumbnail(
+    title: str,
+    prompt: str,
+    image_url: str,
+    category_id: str,
+    aspect_ratio: str,
+    user_id: str,
+) -> dict:
+    """Insert a new gallery thumbnail bypassing RLS."""
+    result = (
+        supabase.table("gallery_thumbnails")
+        .insert(
+            {
+                "title": title,
+                "prompt": prompt,
+                "image_url": image_url,
+                "category_id": category_id,
+                "aspect_ratio": aspect_ratio,
+                "model": "user-upload",
+                "uploaded_by": user_id,
+                "is_active": True,
+            }
+        )
+        .execute()
+    )
+    return result.data[0]
+
+
+async def get_admin_thumbnails(user_id: str) -> list:
+    """Get all gallery thumbnails uploaded by a specific user."""
+    result = (
+        supabase.table("gallery_thumbnails")
+        .select("*")
+        .eq("uploaded_by", user_id)
+        .order("created_at", desc=True)
+        .execute()
+    )
+    return result.data
+
+
+async def update_admin_thumbnail(
+    thumbnail_id: str,
+    user_id: str,
+    title: str,
+    prompt: str,
+    category_id: str,
+    aspect_ratio: str,
+) -> dict:
+    """Update an existing gallery thumbnail."""
+    result = (
+        supabase.table("gallery_thumbnails")
+        .update(
+            {
+                "title": title,
+                "prompt": prompt,
+                "category_id": category_id,
+                "aspect_ratio": aspect_ratio,
+            }
+        )
+        .eq("id", thumbnail_id)
+        .eq("uploaded_by", user_id)
+        .execute()
+    )
+    if not result.data:
+        raise Exception("Thumbnail not found or unauthorized")
+    return result.data[0]
+
+
+async def delete_admin_thumbnail(thumbnail_id: str, user_id: str) -> None:
+    """Delete a gallery thumbnail."""
+    result = (
+        supabase.table("gallery_thumbnails")
+        .delete()
+        .eq("id", thumbnail_id)
+        .eq("uploaded_by", user_id)
+        .execute()
+    )
+    if not result.data:
+        raise Exception("Thumbnail not found or unauthorized")

@@ -103,3 +103,106 @@ export async function uploadGalleryImage(
   const data = await response.json();
   return data.url;
 }
+
+/**
+ * Upload a gallery thumbnail bypassing login (for specific admins).
+ */
+export async function addAdminThumbnail(
+  file: File,
+  adminEmail: string,
+  title: string,
+  prompt: string,
+  categoryId: string,
+  aspectRatio: string
+): Promise<any> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("admin_email", adminEmail);
+  formData.append("title", title);
+  formData.append("prompt", prompt);
+  formData.append("category_id", categoryId);
+  formData.append("aspect_ratio", aspectRatio);
+
+  const response = await fetch(`${API_URL}/api/internal/add-thumbnail`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(
+      error.detail || `Upload failed with status ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
+
+/**
+ * Get thumbnails uploaded by a specific admin.
+ */
+export async function getAdminThumbnails(adminEmail: string): Promise<any[]> {
+  const response = await fetch(`${API_URL}/api/internal/thumbnails?admin_email=${encodeURIComponent(adminEmail)}`);
+  
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(
+      error.detail || `Fetch failed with status ${response.status}`
+    );
+  }
+
+  const data = await response.json();
+  return data.thumbnails;
+}
+
+/**
+ * Update a thumbnail uploaded by an admin.
+ */
+export async function updateAdminThumbnail(
+  thumbnailId: string,
+  adminEmail: string,
+  title: string,
+  prompt: string,
+  categoryId: string,
+  aspectRatio: string
+): Promise<any> {
+  const formData = new FormData();
+  formData.append("admin_email", adminEmail);
+  formData.append("title", title);
+  formData.append("prompt", prompt);
+  formData.append("category_id", categoryId);
+  formData.append("aspect_ratio", aspectRatio);
+
+  const response = await fetch(`${API_URL}/api/internal/thumbnails/${thumbnailId}`, {
+    method: "PUT",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(
+      error.detail || `Update failed with status ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
+
+/**
+ * Delete a thumbnail uploaded by an admin.
+ */
+export async function deleteAdminThumbnail(
+  thumbnailId: string,
+  adminEmail: string
+): Promise<void> {
+  const response = await fetch(`${API_URL}/api/internal/thumbnails/${thumbnailId}?admin_email=${encodeURIComponent(adminEmail)}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(
+      error.detail || `Delete failed with status ${response.status}`
+    );
+  }
+}
