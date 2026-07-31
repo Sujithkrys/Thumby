@@ -20,8 +20,8 @@ export function Modal({ children, onClose, width = "520px" }: ModalProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-[--radius-card] overflow-hidden shadow-[--shadow-modal] relative"
-        style={{ width, maxWidth: "90%" }}
+        className="bg-white rounded-[--radius-card] overflow-hidden shadow-[--shadow-modal] relative flex flex-col"
+        style={{ width, maxWidth: "90%", maxHeight: "90vh" }}
         onClick={(e) => e.stopPropagation()}
       >
         <button

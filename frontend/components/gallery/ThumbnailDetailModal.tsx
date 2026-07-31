@@ -51,7 +51,7 @@ export function ThumbnailDetailModal({
     <Modal onClose={onClose} width="480px">
       {/* Image header area */}
       <div 
-        className="w-full bg-studio relative overflow-hidden" 
+        className="w-full bg-studio relative overflow-hidden shrink-0" 
         style={{ aspectRatio: aspectRatioString, maxHeight: '350px' }}
       >
         <img 
@@ -78,7 +78,7 @@ export function ThumbnailDetailModal({
       </div>
 
       {/* Details body */}
-      <div className="p-5 flex flex-col gap-4">
+      <div className="p-5 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
         <div>
           <h2 className="font-heading font-semibold text-[17px] text-ink m-0 mb-2 leading-tight">
             {item.title}
