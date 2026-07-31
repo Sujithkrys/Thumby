@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User, Settings as SettingsIcon, LogOut, X, Activity, AlertTriangle } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { createClient } from "@/lib/supabase-client";
+import { useRouter } from "next/navigation";
 
 interface SettingsModalProps {
   activeTab: "profile" | "account" | "usage";
@@ -24,6 +25,7 @@ export function SettingsModal({
 }: SettingsModalProps) {
   const { user, profile, generations, updateName } = useStore();
   const supabase = createClient();
+  const router = useRouter();
   const GEN_CAP = 20;
 
   // Account tab states
@@ -160,36 +162,44 @@ export function SettingsModal({
           </button>
 
           {activeTab === "profile" && (
-            <div className="max-w-[480px]">
+            <div className="max-w-[420px]">
               <span className="font-heading font-semibold text-[24px] text-ink block mb-8">
                 Profile
               </span>
               
-              <h3 className="font-heading font-medium text-[16px] text-ink mb-4">Your Generations</h3>
-              {generations.length === 0 ? (
-                <p className="text-[14px] text-slate bg-studio p-4 rounded-[8px]">No generations yet.</p>
-              ) : (
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4">
-                  {generations.map((g) => (
-                    <div
-                      key={g.id}
-                      className="rounded-[12px] overflow-hidden border border-border-light shadow-sm"
-                    >
-                      {g.imageUrl ? (
-                        <img
-                          src={g.imageUrl}
-                          alt={g.prompt}
-                          className="w-full aspect-video object-cover block"
-                        />
-                      ) : (
-                        <div className="w-full aspect-video bg-studio flex items-center justify-center text-[12px] text-slate">
-                          Processing
-                        </div>
-                      )}
-                    </div>
-                  ))}
+              <div className="bg-white border border-border-light rounded-[12px] p-6 shadow-sm mb-8">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <span className="text-[12px] text-slate font-medium uppercase tracking-wider block mb-1">Name</span>
+                    <span className="font-body text-[15px] text-ink font-medium">{user?.user_metadata?.name || profile?.name || "Not set"}</span>
+                  </div>
+                  <div>
+                    <span className="text-[12px] text-slate font-medium uppercase tracking-wider block mb-1">Email</span>
+                    <span className="font-body text-[15px] text-ink font-medium">{user?.email || "Unknown"}</span>
+                  </div>
+                  <div>
+                    <span className="text-[12px] text-slate font-medium uppercase tracking-wider block mb-1">Member Since</span>
+                    <span className="font-body text-[15px] text-ink font-medium">
+                      {user?.created_at ? new Date(user.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : "Unknown"}
+                    </span>
+                  </div>
                 </div>
-              )}
+              </div>
+
+              <h3 className="font-heading font-medium text-[16px] text-ink mb-3">Generation History</h3>
+              <p className="text-[14px] text-slate mb-4">
+                You have generated {generations.length} thumbnails.
+              </p>
+              
+              <button
+                onClick={() => {
+                  onClose();
+                  router.push("/history");
+                }}
+                className="w-full py-3 bg-white border border-border-medium text-ink rounded-[8px] font-medium text-[14px] cursor-pointer hover:bg-studio transition-colors shadow-sm text-center block"
+              >
+                View full history
+              </button>
             </div>
           )}
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Star, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Home, Sparkles, Star, Clock, PanelLeftClose, PanelLeft } from "lucide-react";
 import { NavItem } from "./NavItem";
 import { GenerationCounter } from "./GenerationCounter";
 import { UserPopup } from "@/components/account/UserPopup";
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: "/gallery", label: "Gallery", icon: Home },
   { href: "/generate", label: "Generate", icon: Sparkles },
   { href: "/favourites", label: "Favourites", icon: Star },
+  { href: "/history", label: "History", icon: Clock },
 ] as const;
 
 /**
