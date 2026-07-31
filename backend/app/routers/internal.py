@@ -31,7 +31,7 @@ async def upload_gallery_image(
     image_url = await upload_to_r2(
         image_bytes=contents,
         user_id=user["id"],
-        file_type="gallery_thumbnail",
+        file_type="gallery",
     )
 
     return {"url": image_url}
@@ -58,7 +58,7 @@ async def add_thumbnail(
     image_url = await upload_to_r2(
         image_bytes=contents,
         user_id=user_id,
-        file_type="gallery_thumbnail",
+        file_type="gallery",
     )
     
     thumbnail = await insert_gallery_thumbnail(
