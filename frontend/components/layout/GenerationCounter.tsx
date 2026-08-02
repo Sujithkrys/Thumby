@@ -32,7 +32,7 @@ export function GenerationCounter({ used, cap, isExpanded = true }: GenerationCo
       </div>
       <div className="h-[5px] bg-border-light rounded-[3px] overflow-hidden w-full">
         <div
-          className="h-full bg-flare rounded-[3px] transition-all duration-300"
+          className="h-full bg-gold rounded-[3px] transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>

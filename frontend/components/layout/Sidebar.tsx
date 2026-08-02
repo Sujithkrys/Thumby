@@ -75,7 +75,7 @@ export function Sidebar() {
 
       {/* Spacer + bottom section */}
       <div className={`mt-auto pt-4 ${isExpanded ? "" : "w-full flex flex-col items-center"}`}>
-        <GenerationCounter used={generations.length} cap={20} isExpanded={isExpanded} />
+        <GenerationCounter used={generations.filter(g => g.status === "completed").length} cap={20} isExpanded={isExpanded} />
         <UserPopup isExpanded={isExpanded} />
       </div>
     </aside>
