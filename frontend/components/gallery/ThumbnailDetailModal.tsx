@@ -78,7 +78,7 @@ export function ThumbnailDetailModal({
       </div>
 
       {/* Details body */}
-      <div className="p-5 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
+      <div className="p-5 flex flex-col gap-4 overflow-y-auto custom-scrollbar flex-1 min-h-0">
         <div>
           <h2 className="font-heading font-semibold text-[17px] text-ink m-0 mb-2 leading-tight">
             {item.title}
@@ -119,22 +119,22 @@ export function ThumbnailDetailModal({
             )}
           </div>
         </div>
-        
-        {/* Actions */}
-        <div className="grid grid-cols-2 gap-3 mt-2">
-          <button 
-            onClick={() => { onClose(); onUseAsPrompt(); }}
-            className="w-full py-2.5 rounded-[--radius-button] border border-border-medium bg-white text-ink font-body text-[13px] font-medium cursor-pointer hover:bg-studio transition-colors"
-          >
-            Use as prompt
-          </button>
-          <button 
-            onClick={() => { onClose(); onUseAsReference(); }}
-            className="w-full py-2.5 rounded-[--radius-button] border-none bg-ink text-white font-body text-[13px] font-medium cursor-pointer hover:bg-ink/90 transition-colors shadow-sm"
-          >
-            Use as reference
-          </button>
-        </div>
+      </div>
+      
+      {/* Actions */}
+      <div className="p-5 pt-3 grid grid-cols-2 gap-3 shrink-0 border-t border-border-light bg-white">
+        <button 
+          onClick={() => { onClose(); onUseAsPrompt(); }}
+          className="w-full py-2.5 rounded-[--radius-button] border border-border-medium bg-white text-ink font-body text-[13px] font-medium cursor-pointer hover:bg-studio transition-colors"
+        >
+          Use as prompt
+        </button>
+        <button 
+          onClick={() => { onClose(); onUseAsReference(); }}
+          className="w-full py-2.5 rounded-[--radius-button] border-none bg-ink text-white font-body text-[13px] font-medium cursor-pointer hover:bg-ink/90 transition-colors shadow-sm"
+        >
+          Use as reference
+        </button>
       </div>
     </Modal>
   );
