@@ -41,7 +41,7 @@ export function AboutThumby() {
             {/* Scrollable Body */}
             <div className="p-6 overflow-y-auto">
               <p className="text-gray-600 mb-4 leading-relaxed">
-                Thumby is an AI platform that helps you browse and generate high-converting YouTube thumbnails. 
+                Thumby is an AI platform that helps you browse and generate high-converting YouTube, Instagram, Facebook, TikTok Reels and YouTube Shorts thumbnails. 
               </p>
               <p className="text-gray-600 mb-6">
                 This is an early build. Here's exactly what's real right now.

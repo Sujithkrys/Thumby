@@ -1,6 +1,6 @@
 # Thumby — AI Thumbnail Generator 🎨✨
 
-Thumby is an AI-powered platform designed to help YouTube and Instagram creators browse and generate high-converting thumbnails. By leveraging advanced generation models (`gpt-image-2`), Thumby makes professional-quality thumbnails accessible at a fraction of the cost, eliminating the need for expensive freelancers or advanced design skills.
+Thumby is an AI-powered platform designed to help creators browse and generate high-converting thumbnails for YouTube, Instagram, Facebook, TikTok Reels and YouTube Shorts. By leveraging advanced generation models (`gpt-image-2`), Thumby makes professional-quality thumbnails accessible at a fraction of the cost, eliminating the need for expensive freelancers or advanced design skills.
 
 ## 🚀 Features
 
