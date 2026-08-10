@@ -39,7 +39,7 @@ export function Sidebar() {
           className={`flex items-center gap-[9px] border-none bg-transparent ${!isExpanded ? 'cursor-pointer hover:opacity-80 p-[4px] -ml-[4px] rounded-[8px]' : 'cursor-default'}`}
           aria-label={!isExpanded ? "Expand sidebar" : undefined}
         >
-          <div className="w-6 h-6 rounded-[7px] bg-ink shrink-0" />
+          <img src="/logo.png" alt="Thumby Logo" className="w-6 h-6 object-contain shrink-0" />
           {isExpanded && (
             <span className="font-heading font-semibold text-[15px] text-ink">
               thumby

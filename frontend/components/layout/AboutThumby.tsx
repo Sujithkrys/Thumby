@@ -26,7 +26,7 @@ export function AboutThumby() {
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <div className="flex items-center gap-2 text-xl font-bold text-gray-900">
                 <div className="bg-orange-100 p-2 rounded-lg">
-                  <ImageIcon className="w-6 h-6 text-orange-600" />
+                  <img src="/logo.png" alt="Logo" className="w-6 h-6 object-contain" />
                 </div>
                 Thumby
               </div>
