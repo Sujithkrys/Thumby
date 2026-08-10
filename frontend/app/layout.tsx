@@ -3,7 +3,7 @@ import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { StoreProvider } from "@/lib/store";
-
+import { AboutThumby } from "@/components/layout/AboutThumby";
 const inter = Inter({
   variable: "--font-body",
   subsets: ["latin"],
@@ -44,6 +44,7 @@ export default function RootLayout({
               {children}
             </main>
           </div>
+          <AboutThumby />
         </StoreProvider>
       </body>
     </html>
